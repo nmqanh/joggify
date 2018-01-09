@@ -2,22 +2,25 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { AppContainer } from 'react-hot-loader';
-import RootContainer from './containers/RootContainer';
+import AppRouter from './containers/AppRouter';
+import configureStore from './store/configureStore';
 
-const render = Component => {
+const store = configureStore();
+
+const render = (Component) => {
   ReactDOM.render(
     <AppContainer>
-      <Component />
+      <Component store={store} />
     </AppContainer>,
     document.getElementById('root')
   );
-}
+};
 
-render(RootContainer);
+render(AppRouter);
 
 if (module.hot) {
-  module.hot.accept('./containers/RootContainer.js', () => {
-    const NextRootContainer = require('./containers/RootContainer').default;
-    render(NextRootContainer);
+  module.hot.accept('./containers/AppRouter', () => {
+    const NextAppRouter = require('./containers/AppRouter').default; // eslint-disable-line
+    render(NextAppRouter);
   });
 }
