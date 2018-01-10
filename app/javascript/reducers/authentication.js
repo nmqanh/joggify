@@ -1,7 +1,7 @@
 import { SIGN_IN, SIGN_OUT } from '../consts/ActionTypes';
 
 const initialState = {
-  currentUser: 'hello'
+  currentUser: null
 };
 
 export default function authentication(state = initialState, action) {

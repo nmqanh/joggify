@@ -9,13 +9,7 @@ import { Provider } from 'react-redux';
 
 import App from './App';
 import MyJoggingTime from '../components/MyJoggingTime';
-
-
-const About = () => (
-  <div>
-    <h2>About</h2>
-  </div>
-);
+import MyJoggingReport from '../components/MyJoggingReport';
 
 class AppRouter extends React.Component {
   render() {
@@ -25,7 +19,7 @@ class AppRouter extends React.Component {
         <Router>
           <App>
             <Route exact path="/" component={MyJoggingTime}/>
-            <Route path="/about" component={About}/>
+            <Route path="/report" component={MyJoggingReport}/>
           </App>
         </Router>
       </Provider>
