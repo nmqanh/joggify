@@ -50,7 +50,7 @@ class SignInPage extends React.Component {
       }
     } = this.props;
 
-    signIn(email, password);
+    signIn({ email, password });
   }
 
   render() {

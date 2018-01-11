@@ -16,6 +16,9 @@ class Toaster extends React.Component {
           message={message}
           autoHideDuration={duration || 4000}
           onClose={onClose}
+          style={{
+            height: 'auto', lineHeight: '28px', whiteSpace: 'pre-line'
+          }}
         />
       </span>
     );

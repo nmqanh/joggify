@@ -10,6 +10,7 @@ import { Provider } from 'react-redux';
 import App from './App';
 import MyJoggingTime from '../components/MyJoggingTime';
 import MyJoggingReport from '../components/MyJoggingReport';
+import AccountSettings from '../components/AccountSettings';
 
 class AppRouter extends React.Component {
   render() {
@@ -19,7 +20,8 @@ class AppRouter extends React.Component {
         <Router>
           <App>
             <Route exact path="/" component={MyJoggingTime}/>
-            <Route path="/report" component={MyJoggingReport}/>
+            <Route exact path="/report" component={MyJoggingReport}/>
+            <Route exact path="/account-settings" component={AccountSettings}/>
           </App>
         </Router>
       </Provider>

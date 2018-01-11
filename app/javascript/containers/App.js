@@ -23,6 +23,18 @@ class App extends React.Component {
     };
   }
 
+  componentDidMount() {
+    const {
+      authActions: {
+        validateToken
+      },
+      authentication: {
+        currentUser
+      }
+    } = this.props;
+    currentUser && validateToken();
+  }
+
   render() {
     const {
       children,
@@ -39,7 +51,7 @@ class App extends React.Component {
       <div>
         <Toaster
           {...dash}
-          duration={3000}
+          duration={4000}
           onClose={this.toasted.bind(this)}
         />
         <Reboot />

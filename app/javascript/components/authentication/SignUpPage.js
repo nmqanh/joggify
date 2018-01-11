@@ -6,22 +6,20 @@ import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Button from 'material-ui/Button';
 import AppBar from 'material-ui/AppBar';
 import Typography from 'material-ui/Typography';
+import moment from 'moment-timezone';
 import BackgroundImage from 'images/unsplash_jogging.jpg';
-import TextField from 'material-ui/TextField';
 import { Link, withRouter } from 'react-router-dom';
+import SignUpForm from '../forms/SignUpForm';
 
 const styles = () => ({
   card: {
     margin: '0 auto',
     maxWidth: 500,
-    height: 510,
+    height: 'auto',
     top: 'calc(50% - 300px)',
     position: 'absolute',
     left: 0,
     right: 0
-  },
-  button: {
-    marginTop: '3em'
   },
   flex: {
     flex: 1
@@ -42,6 +40,19 @@ const backgroundStyle = {
 };
 
 class SignUpPage extends React.Component {
+  handleSignUpSubmit(values) {
+    const { authActions: { signUp }, history } = this.props;
+    const { email, name, password } = values;
+
+    signUp({
+      email,
+      name,
+      password,
+      timezone: moment.tz.guess(),
+      history
+    });
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -53,45 +64,7 @@ class SignUpPage extends React.Component {
                 Joggify - Sign up and Track jogging
               </Typography>
             </AppBar>
-            <TextField
-              label="Full Name"
-              type="text"
-              placeholder="Full Name"
-              className={classes.textField}
-              margin="normal"
-              fullWidth
-            />
-
-            <TextField
-              label="Email Address"
-              type="email"
-              placeholder="Email Address"
-              className={classes.textField}
-              margin="normal"
-              fullWidth
-            />
-
-            <TextField
-              label="Password"
-              type="password"
-              placeholder="Password"
-              className={classes.textField}
-              margin="normal"
-              fullWidth
-            />
-
-            <TextField
-              label="Confirm Password"
-              type="password"
-              placeholder="Confirm Password"
-              className={classes.textField}
-              margin="normal"
-              fullWidth
-            />
-
-            <Button type="submit" raised color="primary" className={classes.button}>
-              SIGN UP
-            </Button>
+            <SignUpForm onSubmit={this.handleSignUpSubmit.bind(this)} />
           </CardContent>
           <CardActions>
             <Button component={Link} dense to="/">Sign In</Button>
@@ -103,7 +76,9 @@ class SignUpPage extends React.Component {
 }
 
 SignUpPage.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  authActions: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(withRouter(SignUpPage));

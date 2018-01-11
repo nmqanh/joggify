@@ -17,6 +17,7 @@ import MenuIcon from 'material-ui-icons/Menu';
 import Avatar from 'material-ui/Avatar';
 import md5 from 'blueimp-md5';
 import { Manager, Target, Popper } from 'react-popper';
+import { Link } from 'react-router-dom';
 import ClickAwayListener from 'material-ui/utils/ClickAwayListener';
 import NavMenu from './NavMenu';
 
@@ -134,7 +135,15 @@ class ResponsiveDrawer extends React.Component {
                 <Grow in={open} id="menu-list" style={{ transformOrigin: '0 0 0' }}>
                   <Paper>
                     <MenuList role="menu">
-                      <MenuItem onClick={this.handleClose}>My account</MenuItem>
+                      <Link
+                        to="/account-settings"
+                        style={{
+                          textDecoration: 'none',
+                          color: 'inherit'
+                        }}
+                      >
+                        <MenuItem onClick={this.handleClose}>My account</MenuItem>
+                      </Link>
                       <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
                     </MenuList>
                   </Paper>
