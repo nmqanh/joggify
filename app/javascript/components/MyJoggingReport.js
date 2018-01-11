@@ -1,9 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-
-import * as AuthenticationActions from '../actions/AuthenticationActions';
 
 
 class MyJoggingReport extends React.Component {
@@ -17,18 +13,15 @@ class MyJoggingReport extends React.Component {
 }
 
 MyJoggingReport.propTypes = {
-  authentication: PropTypes.object.isRequired
 };
 
-function mapState(state) {
+function mapState() {
   return {
-    authentication: state.authentication
   };
 }
 
-function mapDispatch(dispatch) {
+function mapDispatch() {
   return {
-    authenticationActions: bindActionCreators(AuthenticationActions, dispatch)
   };
 }
 

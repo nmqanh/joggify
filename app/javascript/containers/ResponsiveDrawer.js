@@ -15,6 +15,7 @@ import Hidden from 'material-ui/Hidden';
 import Divider from 'material-ui/Divider';
 import MenuIcon from 'material-ui-icons/Menu';
 import Avatar from 'material-ui/Avatar';
+import md5 from 'blueimp-md5';
 import { Manager, Target, Popper } from 'react-popper';
 import ClickAwayListener from 'material-ui/utils/ClickAwayListener';
 import NavMenu from './NavMenu';
@@ -91,8 +92,18 @@ class ResponsiveDrawer extends React.Component {
     this.setState({ open: false });
   };
 
+  handleLogout = () => {
+    this.setState({ open: false });
+    this.props.authActions.signOut();
+  };
+
   render() {
-    const { classes, theme, children } = this.props;
+    const {
+      classes,
+      theme,
+      children,
+      currentUser
+    } = this.props;
     const { open } = this.state;
 
     const drawer = (
@@ -101,8 +112,12 @@ class ResponsiveDrawer extends React.Component {
           <Manager>
             <Target>
               <ListItem button onClick={this.handleClick}>
-                <Avatar alt="Remy Sharp" src="https://scontent-sjc2-1.xx.fbcdn.net/v/t1.0-1/p80x80/18194812_10212164096553865_2861775674013478781_n.jpg?oh=44cd697ac0e7d0f73765047e0ba4d296&oe=5AECB706" className={classes.avatar} />
-                <ListItemText primary="Anh Nguyen"/>
+                <Avatar
+                  alt="Remy Sharp"
+                  src={`https://www.gravatar.com/avatar/${md5(currentUser.email.toLowerCase().trim())}?d=monsterid`}
+                  className={classes.avatar}
+                />
+                <ListItemText primary={currentUser.name} />
               </ListItem>
             </Target>
             <Popper
@@ -120,7 +135,7 @@ class ResponsiveDrawer extends React.Component {
                   <Paper>
                     <MenuList role="menu">
                       <MenuItem onClick={this.handleClose}>My account</MenuItem>
-                      <MenuItem onClick={this.handleClose}>Logout</MenuItem>
+                      <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
                     </MenuList>
                   </Paper>
                 </Grow>
@@ -191,7 +206,9 @@ class ResponsiveDrawer extends React.Component {
 ResponsiveDrawer.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
-  children: PropTypes.array.isRequired
+  children: PropTypes.array.isRequired,
+  authActions: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired
 };
 
 export default withStyles(styles, { withTheme: true })(ResponsiveDrawer);

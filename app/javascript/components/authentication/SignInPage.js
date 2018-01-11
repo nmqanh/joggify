@@ -7,21 +7,19 @@ import Button from 'material-ui/Button';
 import AppBar from 'material-ui/AppBar';
 import Typography from 'material-ui/Typography';
 import BackgroundImage from 'images/unsplash_jogging.jpg';
-import TextField from 'material-ui/TextField';
 import { Link, withRouter } from 'react-router-dom';
+
+import SignInForm from '../forms/SignInForm';
 
 const styles = () => ({
   card: {
     margin: '0 auto',
     maxWidth: 500,
-    height: 360,
+    height: 'auto',
     top: 'calc(50% - 180px)',
     position: 'absolute',
     left: 0,
     right: 0
-  },
-  button: {
-    marginTop: '3em'
   },
   flex: {
     flex: 1
@@ -42,6 +40,19 @@ const backgroundStyle = {
 };
 
 class SignInPage extends React.Component {
+  handleSignInSubmit(values) {
+    const {
+      email, password
+    } = values;
+    const {
+      authActions: {
+        signIn
+      }
+    } = this.props;
+
+    signIn(email, password);
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -53,29 +64,7 @@ class SignInPage extends React.Component {
                 Joggify - Jogging time tracker
               </Typography>
             </AppBar>
-            <TextField
-              id="with-placeholder"
-              label="Email Address"
-              type="email"
-              placeholder="Email Address"
-              className={classes.textField}
-              margin="normal"
-              fullWidth
-            />
-
-            <TextField
-              id="with-placeholder"
-              label="Password"
-              type="password"
-              placeholder="Password"
-              className={classes.textField}
-              margin="normal"
-              fullWidth
-            />
-
-            <Button type="submit" raised color="primary" className={classes.button}>
-              SIGN IN
-            </Button>
+            <SignInForm onSubmit={this.handleSignInSubmit.bind(this)} />
           </CardContent>
           <CardActions>
             <Button component={Link} dense to="/signup">Create an account</Button>
@@ -88,7 +77,8 @@ class SignInPage extends React.Component {
 }
 
 SignInPage.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  authActions: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(withRouter(SignInPage));

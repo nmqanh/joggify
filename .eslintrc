@@ -14,7 +14,8 @@
   },
   "globals": {
     "document": true,
-    "window": true
+    "window": true,
+    "Routes": true
   },
   "env": {
     "node": true,
@@ -40,6 +41,7 @@
       "requireReturnDescription": false,
       "requireParamDescription": false
     }],
+    "arrow-parens": [0],
     "import/no-extraneous-dependencies": [0]
   }
 }
