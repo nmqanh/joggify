@@ -97,7 +97,7 @@ function getSuggestions(inputValue) {
 const styles = {
   container: {
     flexGrow: 1,
-    height: 100,
+    height: 80,
     zIndex: 2
   },
   textField: {

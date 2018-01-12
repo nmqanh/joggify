@@ -122,7 +122,7 @@ class ResponsiveDrawer extends React.Component {
               </ListItem>
             </Target>
             <Popper
-              placement="bottom-end"
+              placement="bottom-center"
               eventsEnabled={open}
               className={cx({ [classes.popperClose]: !open })}
               style={{
