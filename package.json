@@ -15,11 +15,14 @@
     "downshift": "^1.23.2",
     "material-ui": "^1.0.0-beta.27",
     "material-ui-icons": "^1.0.0-beta.17",
+    "moment": "^2.20.1",
     "moment-timezone": "^0.5.14",
+    "pluralize": "^7.0.0",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-hot-loader": "^3.1.3",
+    "react-infinite-scroller": "^1.1.2",
     "react-popper": "^0.7.5",
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
@@ -34,6 +37,6 @@
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-react": "^7.5.1",
-    "webpack-dev-server": "2.9.7"
+    "webpack-dev-server": "^2.10.1"
   }
 }

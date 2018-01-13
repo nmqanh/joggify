@@ -18,7 +18,7 @@ export default class NavMenu extends React.Component {
           <ListItemIcon>
             <RunIcon />
           </ListItemIcon>
-          <ListItemText primary="Jogging Time"/>
+          <ListItemText primary="Jogging Trips"/>
         </ListItem>
 
         <ListItem component={NavLink} button activeStyle={{ ...styles.activeLink }} exact to="/report">

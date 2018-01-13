@@ -33,6 +33,15 @@ gem "devise_token_auth"
 # Get Rails Route in JS
 gem "js-routes"
 
+# For date validate
+gem "date_validator"
+
+# Serializer
+gem "active_model_serializers"
+
+# Paginagtion
+gem "will_paginate", "~> 3.1.6"
+
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password

@@ -10,10 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180111090626) do
+ActiveRecord::Schema.define(version: 20180112115429) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "time_entries", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "duration_in_minutes", null: false
+    t.float "distance_in_kilometres", null: false
+    t.datetime "date", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["date"], name: "index_time_entries_on_date"
+    t.index ["user_id"], name: "index_time_entries_on_user_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "provider", default: "email", null: false
@@ -45,4 +56,5 @@ ActiveRecord::Schema.define(version: 20180111090626) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
+  add_foreign_key "time_entries", "users"
 end

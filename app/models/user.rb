@@ -1,7 +1,8 @@
 class User < ActiveRecord::Base
-  # Include default devise modules.
   devise :database_authenticatable, :registerable,
           :recoverable, :rememberable, :trackable, :validatable
+
+  has_many :time_entries, dependent: :destroy
 
   validates_inclusion_of :timezone,
     in: ActiveSupport::TimeZone.all.map { |tz| tz.tzinfo.name }

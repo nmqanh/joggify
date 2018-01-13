@@ -5,7 +5,7 @@ const initialState = {
   currentUser: offlineCurrentUser ? JSON.parse(offlineCurrentUser) : null
 };
 
-export default function authentication(state = initialState, action) {
+export default function (state = initialState, action) {
   switch (action.type) {
   case SIGN_IN:
     return {

@@ -4,5 +4,10 @@ Rails.application.routes.draw do
   get "/report" => "pages#home"
   get "/signup" => "pages#home"
   get "/account-settings" => "pages#home"
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+
+  namespace :api, defaults: { format: :json } do
+    namespace :v1 do
+      resources :time_entries
+    end
+  end
 end

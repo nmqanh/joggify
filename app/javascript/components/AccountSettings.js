@@ -7,7 +7,6 @@ import Typography from 'material-ui/Typography';
 import * as AuthActions from '../actions/AuthActions';
 import AccountUpdateForm from './forms/AccountUpdateForm';
 
-
 class AccountSettings extends React.Component {
   handleSignUpSubmit(values) {
     const { authActions: { updateAccount } } = this.props;

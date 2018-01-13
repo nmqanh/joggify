@@ -54,7 +54,6 @@ export function signIn({ email, password }) {
   };
 }
 
-
 export function signUp({
   email, name, password, timezone, history
 }) {

@@ -9,3 +9,7 @@ export const ACCOUNT_UPDATED = 'ACCOUNT_UPDATED';
 // Toast Actions
 export const TOAST_DASH_MESSAGE = 'TOAST_DASH_MESSAGE';
 export const TOAST_DASH_CLEAR = 'TOAST_DASH_CLEAR';
+
+// Time Entry Actions
+export const REMOVE_TIME_ENTRY = 'REMOVE_TIME_ENTRY';
+export const GET_TIME_ENTRIES = 'GET_TIME_ENTRIES';

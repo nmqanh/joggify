@@ -17,7 +17,7 @@ import MenuIcon from 'material-ui-icons/Menu';
 import Avatar from 'material-ui/Avatar';
 import md5 from 'blueimp-md5';
 import { Manager, Target, Popper } from 'react-popper';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import ClickAwayListener from 'material-ui/utils/ClickAwayListener';
 import NavMenu from './NavMenu';
 
@@ -66,7 +66,8 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.default,
     width: '100%',
     padding: theme.spacing.unit * 3,
-    height: 'calc(100% - 56px)',
+    height: 'auto',
+    overflowX: 'auto',
     marginTop: 56,
     [theme.breakpoints.up('sm')]: {
       height: 'calc(100% - 64px)',
@@ -98,6 +99,21 @@ class ResponsiveDrawer extends React.Component {
     this.props.authActions.signOut();
   };
 
+  appBarTitle() {
+    const { location: { pathname } } = this.props;
+
+    switch (pathname) {
+    case '/':
+      return 'Jogging Trips';
+    case '/report':
+      return 'Report';
+    case '/account-settings':
+      return 'My Account';
+    default:
+      return 'Joggify';
+    }
+  }
+
   render() {
     const {
       classes,
@@ -114,7 +130,7 @@ class ResponsiveDrawer extends React.Component {
             <Target>
               <ListItem button onClick={this.handleClick}>
                 <Avatar
-                  alt="Remy Sharp"
+                  alt={currentUser.name}
                   src={`https://www.gravatar.com/avatar/${md5(currentUser.email.toLowerCase().trim())}?d=monsterid`}
                   className={classes.avatar}
                 />
@@ -122,7 +138,7 @@ class ResponsiveDrawer extends React.Component {
               </ListItem>
             </Target>
             <Popper
-              placement="bottom-center"
+              placement="bottom"
               eventsEnabled={open}
               className={cx({ [classes.popperClose]: !open })}
               style={{
@@ -171,7 +187,7 @@ class ResponsiveDrawer extends React.Component {
                 <MenuIcon />
               </IconButton>
               <Typography type="title" color="inherit" noWrap>
-                Joggify - Your jogging companion
+                Joggify - {this.appBarTitle()}
               </Typography>
             </Toolbar>
           </AppBar>
@@ -217,7 +233,8 @@ ResponsiveDrawer.propTypes = {
   theme: PropTypes.object.isRequired,
   children: PropTypes.array.isRequired,
   authActions: PropTypes.object.isRequired,
-  currentUser: PropTypes.object.isRequired
+  currentUser: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired
 };
 
-export default withStyles(styles, { withTheme: true })(ResponsiveDrawer);
+export default withRouter(withStyles(styles, { withTheme: true })(ResponsiveDrawer));

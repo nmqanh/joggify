@@ -35,16 +35,19 @@ export default function (dispatch, getState, catchError = true) {
   }, (err) => {
     if (catchError) {
       let fullMessages;
-      try {
-        fullMessages = err.response.data.errors.full_messages;
-        fullMessages = fullMessages.filter((item, pos) => (
-          fullMessages.indexOf(item) === pos
-        ));
-        fullMessages = fullMessages.join('\n');
-      } catch (ex) {
-        fullMessages = null;
+      if (err.response.message) {
+        fullMessages = err.response.message;
+      } else {
+        try {
+          fullMessages = err.response.data.errors.full_messages;
+          fullMessages = fullMessages.filter((item, pos) => (
+            fullMessages.indexOf(item) === pos
+          ));
+          fullMessages = fullMessages.join('\n');
+        } catch (ex) {
+          fullMessages = null;
+        }
       }
-
       dispatch({
         type: types.TOAST_DASH_MESSAGE,
         payload: fullMessages || err.toString()

@@ -1,3 +1,8 @@
 node_modules/
 app/assets/
 app/javascript/packs/
+bin/
+public/
+tmp/
+vendor/
+log/
