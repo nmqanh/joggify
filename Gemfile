@@ -42,6 +42,9 @@ gem "active_model_serializers"
 # Paginagtion
 gem "will_paginate", "~> 3.1.6"
 
+# Group for reporting
+gem "groupdate"
+
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password

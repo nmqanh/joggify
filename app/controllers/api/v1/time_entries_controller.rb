@@ -6,20 +6,15 @@ class Api::V1::TimeEntriesController < ApplicationController
   before_action :set_time_entry, only: [:show, :update, :destroy]
 
   def index
-    @time_entries = TimeEntry.where(user: current_user)
-
-    if params[:from_date].present? && params[:to_date].present?
-      @time_entries = @time_entries.where(
-        "date >= ? AND date <= ?", from_date, to_date
-      )
-    end
-
-    @time_entries = @time_entries.order(
-      date: order_params,
-      created_at: order_params
+    @time_entries = TimeEntryQuery.filter(
+      user: current_user,
+      page: filter_params[:page],
+      is_date_ascending: filter_params[:is_date_ascending] == "true",
+      from_date: filter_params[:from_date],
+      to_date: filter_params[:to_date]
     )
 
-    json_response(@time_entries.paginate(page: params[:page]))
+    json_response(@time_entries)
   end
 
   def create
@@ -43,16 +38,8 @@ class Api::V1::TimeEntriesController < ApplicationController
 
   private
 
-    def from_date
-      Time.zone.parse(params[:from_date]).utc.to_date.to_s
-    end
-
-    def to_date
-      Time.zone.parse(params[:to_date]).utc.to_date.to_s
-    end
-
-    def order_params
-      params[:is_date_ascending] == "true" ? :asc : :desc
+    def filter_params
+      params.permit(:page, :is_date_ascending, :from_date, :to_date)
     end
 
     def time_entry_params

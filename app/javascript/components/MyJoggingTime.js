@@ -12,13 +12,13 @@ import FilterForm from './forms/FilterForm';
 import * as TimeEntryActions from '../actions/TimeEntryActions';
 import TimeEntryCard from './TimeEntryCard';
 
-
 const styles = {
   container: {
     padding: '1em'
   },
   filterCard: {
-    margin: '1em 0 10px 0'
+    margin: '1em 0 10px 0',
+    padding: '1em'
   }
 };
 
@@ -29,8 +29,21 @@ class MyJoggingTime extends React.Component {
       isShowingTimeEntryForm: false,
       fromDate: null,
       toDate: null,
-      isDateAscending: false
+      isDateAscending: false,
+      containerHeight: window.innerHeight - 270
     };
+
+    window.addEventListener('resize', this.updateContainerHeight.bind(this));
+  }
+
+  updateContainerHeight() {
+    this.setState({
+      containerHeight: window.innerHeight - 270
+    });
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateContainerHeight.bind(this));
   }
 
   componentWillMount() {
@@ -118,7 +131,8 @@ class MyJoggingTime extends React.Component {
 
   render() {
     const {
-      isShowingTimeEntryForm
+      isShowingTimeEntryForm,
+      containerHeight
     } = this.state;
     const {
       timeEntry: {
@@ -150,7 +164,7 @@ class MyJoggingTime extends React.Component {
         <div style={{ marginTop: 20 }}>
           <Infinite
             elementHeight={120}
-            containerHeight={window.innerHeight - 240}
+            containerHeight={containerHeight}
             infiniteLoadBeginEdgeOffset={200}
             onInfiniteLoad={this.loadMore.bind(this)}
             isInfiniteLoading={isLoading}
@@ -169,12 +183,12 @@ class MyJoggingTime extends React.Component {
           </Infinite>
         </div>
 
-        <div style={{ ...styles.filterCard }}>
+        <Card style={{ ...styles.filterCard }}>
           <FilterForm
             onSubmit={this.handleSubmitFilter.bind(this) }
             onClear={this.handleClearFilter.bind(this)}
           />
-        </div>
+        </Card>
       </div>
     );
   }

@@ -1,12 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from 'material-ui/Button';
-import { FormControlLabel } from 'material-ui/Form';
 import { Field, reduxForm } from 'redux-form';
-import { TextField, Switch } from 'redux-form-material-ui';
+import { TextField } from 'redux-form-material-ui';
 
 const validate = values => {
   const errors = {};
+
+  const requiredFields = ['fromDate', 'toDate'];
+  requiredFields.forEach(field => {
+    if (!values[field]) {
+      errors[field] = 'Required';
+    }
+  });
 
   if (values.fromDate && values.toDate) {
     const d1 = Date.parse(values.fromDate);
@@ -44,7 +50,7 @@ const styles = {
   }
 };
 
-class FilterForm extends React.Component {
+class ReportFilterForm extends React.Component {
   handleClear() {
     const { reset, onClear } = this.props;
     reset();
@@ -78,13 +84,6 @@ class FilterForm extends React.Component {
             }}
             component={TextField}
           />
-          <FormControlLabel
-            style={{ height: 30, marginTop: 15 }}
-            control={
-              <Field name="isDateAscending" component={Switch} />
-            }
-            label="Date ascending"
-          />
 
           <Button type="submit" raised color="primary" style={{ height: 30, marginTop: 12 }}>
             FILTER
@@ -103,13 +102,13 @@ class FilterForm extends React.Component {
   }
 }
 
-FilterForm.propTypes = {
+ReportFilterForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   onClear: PropTypes.func.isRequired,
   reset: PropTypes.func.isRequired
 };
 
 export default reduxForm({
-  form: 'FilterForm',
+  form: 'ReportFilterForm',
   validate
-})(FilterForm);
+})(ReportFilterForm);

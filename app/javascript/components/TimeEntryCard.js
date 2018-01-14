@@ -89,7 +89,7 @@ class TimeEntryCard extends React.Component {
 
   distance() {
     const { timeEntry: { distanceInKilometres } } = this.props;
-    return `${distanceInKilometres} km`;
+    return `${distanceInKilometres.toFixed(2)} km`;
   }
 
   duration() {
