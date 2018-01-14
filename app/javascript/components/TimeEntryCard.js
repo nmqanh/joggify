@@ -15,7 +15,7 @@ import ConfirmDialog from './shared/ConfirmDialog';
 const styles = theme => ({
   card: {
     minWidth: 275,
-    marginTop: '1em'
+    margin: '0 2px 10px 2px'
   },
   bullet: {
     display: 'inline-block',

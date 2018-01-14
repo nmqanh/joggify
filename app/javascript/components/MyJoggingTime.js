@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import InfiniteScroll from 'react-infinite-scroller';
+import Infinite from 'react-infinite';
 import Card from 'material-ui/Card';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 import { LinearProgress } from 'material-ui/Progress';
 import TimeEntryForm from './forms/TimeEntryForm';
+import FilterForm from './forms/FilterForm';
 import * as TimeEntryActions from '../actions/TimeEntryActions';
 import TimeEntryCard from './TimeEntryCard';
 
@@ -15,6 +16,9 @@ import TimeEntryCard from './TimeEntryCard';
 const styles = {
   container: {
     padding: '1em'
+  },
+  filterCard: {
+    margin: '1em 0 10px 0'
   }
 };
 
@@ -22,8 +26,19 @@ class MyJoggingTime extends React.Component {
   constructor() {
     super(...arguments);
     this.state = {
-      isShowingTimeEntryForm: false
+      isShowingTimeEntryForm: false,
+      fromDate: null,
+      toDate: null,
+      isDateAscending: false
     };
+  }
+
+  componentWillMount() {
+    const {
+      timeEntryActions
+    } = this.props;
+    timeEntryActions.resetTimeEntries();
+    timeEntryActions.getTimeEntries({ page: 1 });
   }
 
   showTimeEntryForm() {
@@ -46,17 +61,58 @@ class MyJoggingTime extends React.Component {
     this.hideTimeEntryForm();
   }
 
-  loadMore(page) {
+  handleSubmitFilter({ fromDate, toDate, isDateAscending = false }) {
+    const {
+      timeEntryActions: {
+        getTimeEntries,
+        resetTimeEntries
+      }
+    } = this.props;
+    this.setState({
+      fromDate,
+      toDate,
+      isDateAscending
+    }, () => {
+      resetTimeEntries();
+      getTimeEntries({
+        page: 1,
+        fromDate,
+        toDate,
+        isDateAscending
+      });
+    });
+  }
+
+  handleClearFilter() {
+    const {
+      timeEntryActions: {
+        getTimeEntries,
+        resetTimeEntries
+      }
+    } = this.props;
+
+    this.setState({
+      fromDate: null,
+      toDate: null,
+      isDateAscending: false
+    }, () => {
+      resetTimeEntries();
+      getTimeEntries({ page: 1 });
+    });
+  }
+
+  loadMore() {
     const {
       timeEntry: {
-        hasMore
+        hasMore,
+        page
       },
       timeEntryActions: {
         getTimeEntries
       }
     } = this.props;
     if (hasMore) {
-      getTimeEntries({ page });
+      getTimeEntries({ page: page + 1 });
     }
   }
 
@@ -67,7 +123,7 @@ class MyJoggingTime extends React.Component {
     const {
       timeEntry: {
         timeEntries,
-        hasMore
+        isLoading
       },
       timeEntryActions: {
         editTimeEntry,
@@ -90,14 +146,17 @@ class MyJoggingTime extends React.Component {
             + ADD JOGGING TRIP
           </Button>
         }
-        <div>
-          <InfiniteScroll
-            pageStart={0}
-            loadMore={this.loadMore.bind(this)}
-            hasMore={hasMore}
-            threshold={500}
-            useWindow={false}
-            loader={<LinearProgress style={{ marginTop: 10 }} />}
+
+        <div style={{ marginTop: 20 }}>
+          <Infinite
+            elementHeight={120}
+            containerHeight={window.innerHeight - 240}
+            infiniteLoadBeginEdgeOffset={200}
+            onInfiniteLoad={this.loadMore.bind(this)}
+            isInfiniteLoading={isLoading}
+            loadingSpinnerDelegate={
+              isLoading && <LinearProgress style={{ marginTop: 10 }} />
+            }
           >
             {timeEntries.map(timeEntry => (
               <TimeEntryCard
@@ -107,7 +166,14 @@ class MyJoggingTime extends React.Component {
                 removeTimeEntry={removeTimeEntry}
               />
             ))}
-          </InfiniteScroll>
+          </Infinite>
+        </div>
+
+        <div style={{ ...styles.filterCard }}>
+          <FilterForm
+            onSubmit={this.handleSubmitFilter.bind(this) }
+            onClear={this.handleClearFilter.bind(this)}
+          />
         </div>
       </div>
     );

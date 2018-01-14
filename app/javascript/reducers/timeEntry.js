@@ -1,16 +1,26 @@
 import {
   GET_TIME_ENTRIES,
-  REMOVE_TIME_ENTRY
+  REMOVE_TIME_ENTRY,
+  SET_LOADING_TIME_ENTRIES
 } from '../consts/ActionTypes';
 
 const initialState = {
   timeEntries: [],
   page: 0,
-  hasMore: true
+  hasMore: true,
+  isLoading: false
 };
 
 export default function (state = initialState, action) {
   switch (action.type) {
+  case SET_LOADING_TIME_ENTRIES:
+  {
+    return {
+      ...state,
+      isLoading: true
+    };
+  }
+
   case REMOVE_TIME_ENTRY:
   {
     return {
@@ -26,9 +36,10 @@ export default function (state = initialState, action) {
     const { timeEntries } = state;
     return {
       ...state,
-      timeEntries: page === 1 ? nextTimeEntries : timeEntries.concat(nextTimeEntries),
+      timeEntries: page < 2 ? nextTimeEntries : timeEntries.concat(nextTimeEntries),
       page,
-      hasMore: nextTimeEntries.length > 0
+      hasMore: page === 0 || nextTimeEntries.length > 0,
+      isLoading: false
     };
   }
 

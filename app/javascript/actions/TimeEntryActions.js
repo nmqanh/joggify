@@ -14,10 +14,31 @@ export function removeTimeEntry(timeEntryId) {
   };
 }
 
-export function getTimeEntries({ page }) {
+export function resetTimeEntries() {
+  return {
+    type: types.GET_TIME_ENTRIES,
+    timeEntries: [],
+    page: 0
+  };
+}
+
+export function getTimeEntries({
+  page,
+  fromDate,
+  toDate,
+  isDateAscending
+}) {
   return (dispatch, getState) => {
+    dispatch({
+      type: types.SET_LOADING_TIME_ENTRIES
+    });
     JoggifyApi(dispatch, getState)
-      .get(Routes.api_v1_time_entries_path({ page }))
+      .get(Routes.api_v1_time_entries_path({
+        page,
+        from_date: fromDate,
+        to_date: toDate,
+        is_date_ascending: isDateAscending
+      }))
       .then(({ data: timeEntries }) => {
         dispatch({
           type: types.GET_TIME_ENTRIES,
