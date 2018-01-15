@@ -16,6 +16,10 @@ class ApplicationController < ActionController::Base
   protected
 
     def configure_permitted_parameters
+      if params[:timezone_offset]
+        params[:timezone] = ActiveSupport::TimeZone[-params[:timezone_offset].to_i.minutes].tzinfo.name
+        params.delete :timezone_offset
+      end
       devise_parameter_sanitizer.permit(:sign_up, keys: [:email, :name, :timezone])
       devise_parameter_sanitizer.permit(:account_update, keys: [:email, :name, :timezone])
     end

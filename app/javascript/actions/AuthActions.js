@@ -55,7 +55,7 @@ export function signIn({ email, password }) {
 }
 
 export function signUp({
-  email, name, password, timezone, history
+  email, name, password, timezoneOffset, history
 }) {
   return (dispatch, getState) => {
     JoggifyApi(dispatch, getState)
@@ -63,7 +63,7 @@ export function signUp({
         email,
         password,
         name,
-        timezone
+        timezone_offset: timezoneOffset
       })
       .then((response) => {
         const currentUser = setTokenToUser(response);

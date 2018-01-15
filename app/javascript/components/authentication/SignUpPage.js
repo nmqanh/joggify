@@ -6,7 +6,6 @@ import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Button from 'material-ui/Button';
 import AppBar from 'material-ui/AppBar';
 import Typography from 'material-ui/Typography';
-import moment from 'moment-timezone';
 import BackgroundImage from 'images/unsplash_jogging.jpg';
 import { Link, withRouter } from 'react-router-dom';
 import SignUpForm from '../forms/SignUpForm';
@@ -48,7 +47,7 @@ class SignUpPage extends React.Component {
       email,
       name,
       password,
-      timezone: moment.tz.guess(),
+      timezoneOffset: (new Date()).getTimezoneOffset().toString(),
       history
     });
   }
