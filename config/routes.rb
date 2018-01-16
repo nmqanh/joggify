@@ -4,10 +4,12 @@ Rails.application.routes.draw do
   get "/report" => "pages#home"
   get "/signup" => "pages#home"
   get "/account-settings" => "pages#home"
+  get "/users" => "pages#home"
 
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
       resources :time_entries
+      resources :users
       resources :reports, only: [] do
         collection do
           get :time_entries_by_weeks

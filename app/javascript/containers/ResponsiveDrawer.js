@@ -100,7 +100,7 @@ class ResponsiveDrawer extends React.Component {
   };
 
   appBarTitle() {
-    const { location: { pathname } } = this.props;
+    const { location: { pathname }, currentUser: { role } } = this.props;
 
     switch (pathname) {
     case '/':
@@ -109,8 +109,10 @@ class ResponsiveDrawer extends React.Component {
       return 'Report';
     case '/account-settings':
       return 'My Account';
+    case '/users':
+      return role === 'user' ? 'This page can not be found' : 'Manage Users';
     default:
-      return 'Joggify';
+      return 'This page can not be found';
     }
   }
 
@@ -169,7 +171,7 @@ class ResponsiveDrawer extends React.Component {
           </Manager>
         </div>
         <Divider />
-        <List><NavMenu/></List>
+        <List><NavMenu role={currentUser.role} /></List>
       </div>
     );
 

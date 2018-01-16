@@ -1,7 +1,7 @@
 import JoggifyApi from '../lib/JoggifyApi';
 import * as types from '../consts/ActionTypes';
 
-export function getTimeEntriesByWeeksReport({ fromDate, toDate }) {
+export function getTimeEntriesByWeeksReport({ fromDate, toDate, userId }) {
   return (dispatch, getState) => {
     dispatch({
       type: types.SET_LOADING_TIME_ENTRIES_REPORT
@@ -9,7 +9,8 @@ export function getTimeEntriesByWeeksReport({ fromDate, toDate }) {
     JoggifyApi(dispatch, getState)
       .get(Routes.time_entries_by_weeks_api_v1_reports_path({
         from_date: fromDate,
-        to_date: toDate
+        to_date: toDate,
+        user_id: userId
       }))
       .then(({ data: reportItems }) => {
         dispatch({

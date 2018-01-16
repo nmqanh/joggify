@@ -4,6 +4,7 @@ import Button from 'material-ui/Button';
 import { FormControlLabel } from 'material-ui/Form';
 import { Field, reduxForm } from 'redux-form';
 import { TextField, Switch } from 'redux-form-material-ui';
+import UserSelect from './UserSelect';
 
 const validate = values => {
   const errors = {};
@@ -36,7 +37,7 @@ const validate = values => {
 const styles = {
   textField: {
     marginRight: '1em',
-    width: 200
+    width: 150
   },
   formContainer: {
     display: 'flex',
@@ -45,16 +46,34 @@ const styles = {
 };
 
 class FilterForm extends React.Component {
-  handleClear() {
-    const { reset, onClear } = this.props;
+  handleReset() {
+    const { reset, onReset } = this.props;
     reset();
-    onClear();
+    onReset();
+  }
+
+  onFormChange() {
+    const {
+      dispatch,
+      submit
+    } = this.props;
+    setTimeout(() => {
+      dispatch(submit('FilterForm'));
+    }, 100);
   }
 
   render() {
-    const { handleSubmit } = this.props;
+    const {
+      handleSubmit,
+      isAdmin,
+      selectedUser,
+      onSelectedUserChange
+    } = this.props;
     return (
-      <form onSubmit={handleSubmit}>
+      <form
+        onSubmit={handleSubmit}
+        onChange={this.onFormChange.bind(this)}
+      >
         <div style={{ ...styles.formContainer }}>
           <Field
             style={{ ...styles.textField }}
@@ -78,6 +97,13 @@ class FilterForm extends React.Component {
             }}
             component={TextField}
           />
+          {isAdmin &&
+            <UserSelect
+              selectedUser={selectedUser}
+              onChange={onSelectedUserChange}
+              style={{ marginTop: 12, width: 200, marginRight: 15 }}
+            />
+          }
           <FormControlLabel
             style={{ height: 30, marginTop: 15 }}
             control={
@@ -85,17 +111,14 @@ class FilterForm extends React.Component {
             }
             label="Date ascending"
           />
-
-          <Button type="submit" raised color="primary" style={{ height: 30, marginTop: 12 }}>
-            FILTER
-          </Button>
           <Button
             type="button"
             color="default"
+            raised
             style={{ marginLeft: 10, height: 30, marginTop: 12 }}
-            onClick={this.handleClear.bind(this)}
+            onClick={this.handleReset.bind(this)}
           >
-            CLEAR
+            RESET
           </Button>
         </div>
       </form>
@@ -105,8 +128,13 @@ class FilterForm extends React.Component {
 
 FilterForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
-  onClear: PropTypes.func.isRequired,
-  reset: PropTypes.func.isRequired
+  onReset: PropTypes.func.isRequired,
+  reset: PropTypes.func.isRequired,
+  selectedUser: PropTypes.object,
+  onSelectedUserChange: PropTypes.func.isRequired,
+  isAdmin: PropTypes.bool.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  submit: PropTypes.func.isRequired
 };
 
 export default reduxForm({

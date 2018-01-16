@@ -8,6 +8,7 @@ import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 import RunIcon from 'material-ui-icons/DirectionsRun';
 import TimeIcon from 'material-ui-icons/Timer';
+import PersonIcon from 'material-ui-icons/Person';
 import SpeedIcon from 'material-ui-icons/NetworkCheck';
 import TimeEntryForm from './forms/TimeEntryForm';
 import ConfirmDialog from './shared/ConfirmDialog';
@@ -67,8 +68,8 @@ class TimeEntryCard extends React.Component {
   }
 
   handleSubmitNextTimeEntry(values) {
-    const { editTimeEntry } = this.props;
-    editTimeEntry(values);
+    const { handleEditTimeEntry } = this.props;
+    handleEditTimeEntry(values);
     this.hideTimeEntryForm();
   }
 
@@ -98,8 +99,9 @@ class TimeEntryCard extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, isAdmin } = this.props;
     const { isShowingTimeEntryForm, isShowingConfirmRemoveDialog } = this.state;
+    const { timeEntry: { createdByName } } = this.props;
     return (
       <Card className={classes.card}>
         {isShowingConfirmRemoveDialog &&
@@ -119,6 +121,11 @@ class TimeEntryCard extends React.Component {
             <span style={{ margin: '0 5px' }}>with average speed</span><SpeedIcon color="primary" style={{ margin: '0 10px 0 5px' }}/>
             <strong>{this.averageSpeedInKmsPerHour()} km/h</strong>
           </Typography>
+          {isAdmin &&
+            <Typography style={{ display: 'flex', alignItems: 'flex-end' }}>
+              <PersonIcon color="primary" style={{ marginRight: 5 }}/> <span>{createdByName}</span>
+            </Typography>
+          }
           {isShowingTimeEntryForm &&
             <TimeEntryForm
               initialValues={{
@@ -145,8 +152,9 @@ class TimeEntryCard extends React.Component {
 TimeEntryCard.propTypes = {
   classes: PropTypes.object.isRequired,
   timeEntry: PropTypes.object.isRequired,
-  editTimeEntry: PropTypes.func.isRequired,
-  removeTimeEntry: PropTypes.func.isRequired
+  handleEditTimeEntry: PropTypes.func.isRequired,
+  removeTimeEntry: PropTypes.func.isRequired,
+  isAdmin: PropTypes.bool.isRequired
 };
 
 export default withStyles(styles)(TimeEntryCard);

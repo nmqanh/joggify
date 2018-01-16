@@ -7,7 +7,7 @@ class Api::V1::TimeEntriesController < ApplicationController
 
   def index
     @time_entries = TimeEntryQuery.filter(
-      user: current_user,
+      user: target_user,
       page: filter_params[:page],
       is_date_ascending: filter_params[:is_date_ascending] == "true",
       from_date: filter_params[:from_date],
@@ -18,7 +18,7 @@ class Api::V1::TimeEntriesController < ApplicationController
   end
 
   def create
-    @time_entry = current_user.time_entries.create!(time_entry_params)
+    @time_entry = target_user.time_entries.create!(time_entry_params)
     json_response(@time_entry, :created)
   end
 
@@ -38,8 +38,17 @@ class Api::V1::TimeEntriesController < ApplicationController
 
   private
 
+    def target_user
+      if current_user.admin?
+        find_user = User.where(id: params[:user_id]).first
+        find_user || current_user
+      else
+        current_user
+      end
+    end
+
     def filter_params
-      params.permit(:page, :is_date_ascending, :from_date, :to_date)
+      params.permit(:page, :is_date_ascending, :from_date, :to_date, :user_id)
     end
 
     def time_entry_params

@@ -6,7 +6,7 @@ class Api::V1::ReportsController < ApplicationController
 
   def time_entries_by_weeks
     @report_items = TimeEntryReport.by_weeks(
-      user: current_user,
+      user: target_user,
       from_date: report_params[:from_date],
       to_date: report_params[:to_date]
     )
@@ -16,7 +16,16 @@ class Api::V1::ReportsController < ApplicationController
 
   private
 
+    def target_user
+      if current_user.admin?
+        find_user = User.where(id: params[:user_id]).first
+        find_user || current_user
+      else
+        current_user
+      end
+    end
+
     def report_params
-      params.permit(:from_date, :to_date)
+      params.permit(:from_date, :to_date, :user_id)
     end
 end

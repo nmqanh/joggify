@@ -17,7 +17,7 @@ const styles = {
     padding: '1em'
   },
   filterCard: {
-    margin: '1em 0 10px 0',
+    margin: '0 0 10px 0',
     padding: '1em'
   }
 };
@@ -26,14 +26,30 @@ class MyJoggingTime extends React.Component {
   constructor() {
     super(...arguments);
     this.state = {
-      isShowingTimeEntryForm: false,
-      fromDate: null,
-      toDate: null,
+      ...this.defaultFilterState(),
       isDateAscending: false,
       containerHeight: window.innerHeight - 270
     };
 
     window.addEventListener('resize', this.updateContainerHeight.bind(this));
+  }
+
+  defaultFilterState() {
+    const { currentUser } = this.props;
+    return {
+      fromDate: null,
+      toDate: null,
+      isDateAscending: false,
+      selectedUser: this.isAdmin() ? {
+        id: currentUser.id,
+        label: `${currentUser.name} - ${currentUser.email}`
+      } : null
+    };
+  }
+
+  isAdmin() {
+    const { currentUser: { role } } = this.props;
+    return role === 'admin';
   }
 
   updateContainerHeight() {
@@ -46,12 +62,24 @@ class MyJoggingTime extends React.Component {
     window.removeEventListener('resize', this.updateContainerHeight.bind(this));
   }
 
+  handleSelectedUserChange(selectedUser) {
+    const {
+      timeEntryActions
+    } = this.props;
+    this.setState({
+      selectedUser
+    }, () => {
+      timeEntryActions.resetTimeEntries();
+      this.getTimeEntries({ page: 1 });
+    });
+  }
+
   componentWillMount() {
     const {
       timeEntryActions
     } = this.props;
     timeEntryActions.resetTimeEntries();
-    timeEntryActions.getTimeEntries({ page: 1 });
+    this.getTimeEntries({ page: 1 });
   }
 
   showTimeEntryForm() {
@@ -67,17 +95,29 @@ class MyJoggingTime extends React.Component {
   }
 
   handleSubmitNewTimeEntry(values) {
+    const { selectedUser } = this.state;
     const {
       timeEntryActions
     } = this.props;
-    timeEntryActions.addTimeEntry(values);
+    timeEntryActions.addTimeEntry({
+      ...values,
+      userId: selectedUser ? selectedUser.id : null
+    })
+      .then(() => {
+        this.getTimeEntries({ page: 1 });
+      });
     this.hideTimeEntryForm();
   }
 
   handleSubmitFilter({ fromDate, toDate, isDateAscending = false }) {
+    if (fromDate === this.state.fromDate &&
+        toDate === this.setState.toDate &&
+        isDateAscending === this.state.isDateAscending
+    ) {
+      return;
+    }
     const {
       timeEntryActions: {
-        getTimeEntries,
         resetTimeEntries
       }
     } = this.props;
@@ -87,30 +127,45 @@ class MyJoggingTime extends React.Component {
       isDateAscending
     }, () => {
       resetTimeEntries();
-      getTimeEntries({
-        page: 1,
-        fromDate,
-        toDate,
-        isDateAscending
-      });
+      this.getTimeEntries({ page: 1 });
     });
   }
 
-  handleClearFilter() {
+  getTimeEntries({ page }) {
     const {
       timeEntryActions: {
-        getTimeEntries,
+        getTimeEntries
+      }
+    } = this.props;
+
+    const {
+      fromDate,
+      toDate,
+      isDateAscending,
+      selectedUser
+    } = this.state;
+
+    getTimeEntries({
+      page,
+      fromDate,
+      toDate,
+      isDateAscending,
+      userId: selectedUser ? selectedUser.id : null
+    });
+  }
+
+  handleResetFilter() {
+    const {
+      timeEntryActions: {
         resetTimeEntries
       }
     } = this.props;
 
     this.setState({
-      fromDate: null,
-      toDate: null,
-      isDateAscending: false
+      ...this.defaultFilterState()
     }, () => {
       resetTimeEntries();
-      getTimeEntries({ page: 1 });
+      this.getTimeEntries({ page: 1 });
     });
   }
 
@@ -119,20 +174,31 @@ class MyJoggingTime extends React.Component {
       timeEntry: {
         hasMore,
         page
-      },
-      timeEntryActions: {
-        getTimeEntries
       }
     } = this.props;
     if (hasMore) {
-      getTimeEntries({ page: page + 1 });
+      this.getTimeEntries({ page: page + 1 });
     }
+  }
+
+  handleEditTimeEntry(timeEntry) {
+    const {
+      timeEntryActions: {
+        editTimeEntry
+      }
+    } = this.props;
+
+    editTimeEntry(timeEntry)
+      .then(() => {
+        this.getTimeEntries({ page: 1 });
+      });
   }
 
   render() {
     const {
       isShowingTimeEntryForm,
-      containerHeight
+      containerHeight,
+      selectedUser
     } = this.state;
     const {
       timeEntry: {
@@ -140,15 +206,26 @@ class MyJoggingTime extends React.Component {
         isLoading
       },
       timeEntryActions: {
-        editTimeEntry,
         removeTimeEntry
       }
     } = this.props;
 
     return (
       <div>
+        <Card style={{ ...styles.filterCard }}>
+          <FilterForm
+            onSubmit={this.handleSubmitFilter.bind(this) }
+            onReset={this.handleResetFilter.bind(this)}
+            isAdmin={this.isAdmin()}
+            selectedUser={selectedUser}
+            onSelectedUserChange={this.handleSelectedUserChange.bind(this)}
+          />
+        </Card>
         {isShowingTimeEntryForm && <Card style={{ ...styles.container }}>
-          <Typography type="title">Add new jogging trip</Typography>
+          <Typography type="title">
+            Add new jogging trip
+            {selectedUser && <span> for {selectedUser.label}</span>}
+          </Typography>
           <TimeEntryForm
             onSubmit={this.handleSubmitNewTimeEntry.bind(this)}
             onCancel={this.hideTimeEntryForm.bind(this)}
@@ -160,10 +237,9 @@ class MyJoggingTime extends React.Component {
             + ADD JOGGING TRIP
           </Button>
         }
-
         <div style={{ marginTop: 20 }}>
           <Infinite
-            elementHeight={120}
+            elementHeight={this.isAdmin() ? 144 : 120}
             containerHeight={containerHeight}
             infiniteLoadBeginEdgeOffset={200}
             onInfiniteLoad={this.loadMore.bind(this)}
@@ -174,21 +250,16 @@ class MyJoggingTime extends React.Component {
           >
             {timeEntries.map(timeEntry => (
               <TimeEntryCard
+                isAdmin={this.isAdmin()}
                 key={timeEntry.id}
                 timeEntry={timeEntry}
-                editTimeEntry={editTimeEntry}
+                handleEditTimeEntry={this.handleEditTimeEntry.bind(this)}
                 removeTimeEntry={removeTimeEntry}
               />
             ))}
           </Infinite>
         </div>
 
-        <Card style={{ ...styles.filterCard }}>
-          <FilterForm
-            onSubmit={this.handleSubmitFilter.bind(this) }
-            onClear={this.handleClearFilter.bind(this)}
-          />
-        </Card>
       </div>
     );
   }
@@ -196,12 +267,14 @@ class MyJoggingTime extends React.Component {
 
 MyJoggingTime.propTypes = {
   timeEntry: PropTypes.object.isRequired,
-  timeEntryActions: PropTypes.object.isRequired
+  timeEntryActions: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired
 };
 
 function mapState(state) {
   return {
-    timeEntry: state.timeEntry
+    timeEntry: state.timeEntry,
+    currentUser: state.authentication.currentUser
   };
 }
 

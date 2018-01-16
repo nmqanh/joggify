@@ -15,14 +15,29 @@ window.Chart = require('chart.js');
 class MyJoggingReport extends React.Component {
   constructor() {
     super(...arguments);
-    this.state = {
+
+    this.state = this.defaultFilterState();
+  }
+
+  defaultFilterState() {
+    const { currentUser } = this.props;
+    return {
       toDate: moment().format('YYYY-MM-DD').toString(),
-      fromDate: moment().subtract(2, 'months').format('YYYY-MM-DD').toString()
+      fromDate: moment().subtract(2, 'months').format('YYYY-MM-DD').toString(),
+      selectedUser: this.isAdmin() ? {
+        id: currentUser.id,
+        label: `${currentUser.name} - ${currentUser.email}`
+      } : null
     };
   }
 
   componentDidMount() {
     this.applyFilter();
+  }
+
+  isAdmin() {
+    const { currentUser: { role } } = this.props;
+    return role === 'admin';
   }
 
   applyFilter() {
@@ -32,26 +47,35 @@ class MyJoggingReport extends React.Component {
 
     const {
       fromDate,
-      toDate
+      toDate,
+      selectedUser
     } = this.state;
 
     reportActions.getTimeEntriesByWeeksReport({
       fromDate,
-      toDate
+      toDate,
+      userId: selectedUser ? selectedUser.id : null
     });
   }
 
   handleSubmitFilter({ fromDate, toDate }) {
+    if (fromDate === this.state.fromDate &&
+      toDate === this.state.toDate) {
+      return;
+    }
     this.setState({
       toDate,
       fromDate
     }, this.applyFilter);
   }
 
-  handleClearFilter() {
+  handleResetFilter() {
+    this.setState(this.defaultFilterState(), this.applyFilter);
+  }
+
+  handleSelectedUserChange(selectedUser) {
     this.setState({
-      toDate: moment().format('YYYY-MM-DD').toString(),
-      fromDate: moment().subtract(3, 'months').format('YYYY-MM-DD').toString()
+      selectedUser
     }, this.applyFilter);
   }
 
@@ -63,7 +87,7 @@ class MyJoggingReport extends React.Component {
       }
     } = this.props;
 
-    const { fromDate, toDate } = this.state;
+    const { fromDate, toDate, selectedUser } = this.state;
 
     const distanceData = reportItems.reduce((data, item) => {
       const nextData = data;
@@ -83,10 +107,14 @@ class MyJoggingReport extends React.Component {
           <ReportFilterForm
             initialValues={{
               fromDate,
-              toDate
+              toDate,
+              selectedUser
             }}
+            isAdmin={this.isAdmin()}
+            selectedUser={selectedUser}
+            onSelectedUserChange={this.handleSelectedUserChange.bind(this)}
             onSubmit={this.handleSubmitFilter.bind(this)}
-            onClear={this.handleClearFilter.bind(this)}
+            onReset={this.handleResetFilter.bind(this)}
           />
         </Card>
         {!isLoading &&
@@ -95,13 +123,13 @@ class MyJoggingReport extends React.Component {
               <Typography type="title" style={{ paddingBottom: 30 }}>
                 Jogging distance through weeks
               </Typography>
-              <LineChart height="200px" data={distanceData} xtitle="Weeks" ytitle="km" />
+              <LineChart label="Distance" height="200px" data={distanceData} xtitle="Weeks" ytitle="km" />
             </Card>
             <Card style={{ padding: '1em', marginTop: '2em' }}>
               <Typography type="title" style={{ paddingBottom: 30 }}>
                 Average speed through weeks
               </Typography>
-              <LineChart height="200px" data={avgSpeedData} xtitle="Weeks" ytitle="km/h" />
+              <LineChart label="Average speed" height="200px" data={avgSpeedData} xtitle="Weeks" ytitle="km/h" />
             </Card>
           </div>
         }
@@ -115,12 +143,14 @@ class MyJoggingReport extends React.Component {
 
 MyJoggingReport.propTypes = {
   report: PropTypes.object.isRequired,
-  reportActions: PropTypes.object.isRequired
+  reportActions: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired
 };
 
 function mapState(state) {
   return {
-    report: state.report
+    report: state.report,
+    currentUser: state.authentication.currentUser
   };
 }
 
