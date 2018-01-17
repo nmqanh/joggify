@@ -9,7 +9,11 @@ Rails.application.routes.draw do
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
       resources :time_entries
-      resources :users
+      resources :users do
+        collection do
+          get :search
+        end
+      end
       resources :reports, only: [] do
         collection do
           get :time_entries_by_weeks

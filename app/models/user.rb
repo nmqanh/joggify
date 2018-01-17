@@ -1,9 +1,10 @@
 class User < ActiveRecord::Base
   include PgSearch
+  self.per_page = 8
 
   pg_search_scope :search_by_name_or_email, against: [:name, :email], using: {
     tsearch: {
-      dictionary: "english",
+      dictionary: "simple",
       prefix: true
     }
   }

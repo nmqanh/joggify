@@ -6,13 +6,33 @@ class Api::V1::UsersController < ApplicationController
   before_action :set_user, only: [:show, :update, :destroy]
 
   def index
-    @users = User.all
+    @users = User.all.order(id: :desc)
 
-    if params[:query].present?
-      @users = @users.search_by_name_or_email(params[:query])
+    if search_params[:role].present?
+      @users = @users.where(role: search_params[:role])
     end
 
-    json_response(@users)
+    if search_params[:query].present?
+      @users = @users.search_by_name_or_email(search_params[:query])
+    end
+
+    json_response(
+      total: @users.count,
+      perPage: User.per_page,
+      users: ActiveModel::Serializer::CollectionSerializer.new(
+        @users.paginate(page: params[:page]), each_serializer: UserSerializer
+      )
+    )
+  end
+
+  def search
+    @users = User.all
+
+    if search_params[:query].present?
+      @users = @users.search_by_name_or_email(search_params[:query])
+    end
+
+    json_response(@users.limit(10))
   end
 
   def create
@@ -36,8 +56,8 @@ class Api::V1::UsersController < ApplicationController
 
   private
 
-    def filter_params
-      params.permit(:q)
+    def search_params
+      params.permit(:query, :role)
     end
 
     def user_params

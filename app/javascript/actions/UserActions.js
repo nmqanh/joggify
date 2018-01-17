@@ -23,7 +23,9 @@ export function resetUsers() {
 }
 
 export function getUsers({
-  page
+  page,
+  query = null,
+  role = 'all'
 }) {
   return (dispatch, getState) => {
     dispatch({
@@ -31,20 +33,24 @@ export function getUsers({
     });
     JoggifyApi(dispatch, getState)
       .get(Routes.api_v1_users_path({
-        page
+        page,
+        query,
+        role: role === 'all' ? null : role
       }))
-      .then(({ data: users }) => {
+      .then(({ data: { users, total, perPage } }) => {
         dispatch({
           type: types.GET_USERS,
           users,
-          page
+          page,
+          total,
+          perPage
         });
       });
   };
 }
 
 export function addUser(user) {
-  return (dispatch, getState) => {
+  return (dispatch, getState) => (
     JoggifyApi(dispatch, getState)
       .post(Routes.api_v1_users_path({
         role: user.role,
@@ -54,17 +60,16 @@ export function addUser(user) {
         timezone: user.timezone
       }))
       .then(() => {
-        getUsers({ page: 1 })(dispatch, getState);
         dispatch({
           type: types.TOAST_DASH_MESSAGE,
           payload: 'New user added'
         });
-      });
-  };
+      })
+  );
 }
 
 export function editUser(user) {
-  return (dispatch, getState) => {
+  return (dispatch, getState) => (
     JoggifyApi(dispatch, getState)
       .patch(Routes.api_v1_user_path(user.id, {
         role: user.role,
@@ -74,21 +79,19 @@ export function editUser(user) {
         timezone: user.timezone
       }))
       .then(() => {
-        getUsers({ page: 1 })(dispatch, getState);
         dispatch({
           type: types.TOAST_DASH_MESSAGE,
           payload: 'Edit successfully!'
         });
-      });
-  };
+      })
+  );
 }
 
 export function searchUsers(query) {
   return (dispatch, getState) => (
     JoggifyApi(dispatch, getState)
-      .get(Routes.api_v1_users_path({
-        query,
-        page: 1
+      .get(Routes.search_api_v1_users_path({
+        query
       }))
   );
 }

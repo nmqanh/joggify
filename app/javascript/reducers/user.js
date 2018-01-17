@@ -7,7 +7,8 @@ import {
 const initialState = {
   users: [],
   page: 0,
-  hasMore: true,
+  total: 0,
+  perPage: 0,
   isLoading: false
 };
 
@@ -24,20 +25,26 @@ export default function (state = initialState, action) {
   {
     return {
       ...state,
-      users: state.users.filter(timeEntry =>
-        timeEntry.id !== action.timeEntryId)
+      users: state.users.filter(user =>
+        user.id !== action.userId)
     };
   }
 
   case GET_USERS:
   {
-    const { page, users: nextUsers } = action;
-    const { users } = state;
+    const {
+      page,
+      users,
+      total,
+      perPage
+    } = action;
+
     return {
       ...state,
-      users: page < 2 ? nextUsers : users.concat(nextUsers),
+      users,
       page,
-      hasMore: page === 0 || nextUsers.length > 0,
+      total,
+      perPage,
       isLoading: false
     };
   }
