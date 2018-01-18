@@ -12,7 +12,7 @@ class EditUserDialog extends React.Component {
       onSubmit,
       onClose,
       editingUser,
-      currentRole
+      currentUser
     } = this.props;
 
     return (
@@ -29,7 +29,7 @@ class EditUserDialog extends React.Component {
           <EditUserForm
             initialValues={{ ...(editingUser || {}) }}
             editingUser={editingUser}
-            currentRole={currentRole}
+            currentUser={currentUser}
             actionName={editingUser ? 'UPDATE' : 'ADD' }
             onSubmit={onSubmit}
             onCancel={onClose}
@@ -43,7 +43,7 @@ class EditUserDialog extends React.Component {
 EditUserDialog.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
-  currentRole: PropTypes.string.isRequired,
+  currentUser: PropTypes.object.isRequired,
   editingUser: PropTypes.object
 };
 

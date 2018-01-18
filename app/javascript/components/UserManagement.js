@@ -217,9 +217,7 @@ class UserManagement extends React.Component {
         isLoading
       },
       authentication: {
-        currentUser: {
-          role: currentRole
-        }
+        currentUser
       }
     } = this.props;
     const {
@@ -277,6 +275,12 @@ class UserManagement extends React.Component {
                         style={{ height: 20, cursor: 'pointer' }}
                       />
                     }
+                    {!this.shouldShowEditIcon(user) &&
+                      <EditIcon
+                        color="disabled"
+                        style={{ height: 20 }}
+                      />
+                    }
                     {user.id}
                   </TableCell>
                   <TableCell>{user.name}</TableCell>
@@ -291,6 +295,12 @@ class UserManagement extends React.Component {
                         color="error"
                         onClick={this.handleConfirmRemovingUser.bind(this, user)}
                         style={{ height: 20, cursor: 'pointer' }}
+                      />
+                    }
+                    {!this.shouldShowRemoveIcon(user) &&
+                      <DeleteIcon
+                        color="disabled"
+                        style={{ height: 20 }}
                       />
                     }
                   </TableCell>
@@ -313,7 +323,7 @@ class UserManagement extends React.Component {
         {isEditUserDialogOpen &&
           <EditUserDialog
             editingUser={editingUser}
-            currentRole={currentRole}
+            currentUser={currentUser}
             onSubmit={
               editingUser ? this.handleSubmitEditUser.bind(this)
                 : this.handleSubmitNewUser.bind(this)

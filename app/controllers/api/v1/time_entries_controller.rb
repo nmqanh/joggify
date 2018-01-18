@@ -1,6 +1,7 @@
 class Api::V1::TimeEntriesController < ApplicationController
   include Api::Response
   include Api::ExceptionHandler
+  include Api::V1::TimeEntriesHelper
 
   before_action :authenticate_user!
   before_action :set_time_entry, only: [:show, :update, :destroy]
@@ -13,42 +14,32 @@ class Api::V1::TimeEntriesController < ApplicationController
       from_date: filter_params[:from_date],
       to_date: filter_params[:to_date]
     )
-
     json_response(@time_entries)
   end
 
   def create
-    @time_entry = target_user.time_entries.create!(time_entry_params)
+    @time_entry = target_user.time_entries.build(time_entry_params)
+    authorize @time_entry
+    @time_entry.save!
     json_response(@time_entry, :created)
   end
 
-  def show
-    json_response(@time_entry)
-  end
-
   def update
+    authorize @time_entry
     @time_entry.update!(time_entry_params)
     json_response(@time_entry)
   end
 
   def destroy
+    authorize @time_entry
     @time_entry.destroy
     head :no_content
   end
 
   private
 
-    def target_user
-      if current_user.admin?
-        find_user = User.where(id: params[:user_id]).first
-        find_user || current_user
-      else
-        current_user
-      end
-    end
-
     def filter_params
-      params.permit(:page, :is_date_ascending, :from_date, :to_date, :user_id)
+      params.permit(:page, :is_date_ascending, :from_date, :to_date)
     end
 
     def time_entry_params

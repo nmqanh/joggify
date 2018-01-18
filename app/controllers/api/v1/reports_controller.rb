@@ -1,6 +1,7 @@
 class Api::V1::ReportsController < ApplicationController
   include Api::Response
   include Api::ExceptionHandler
+  include Api::V1::TimeEntriesHelper
 
   before_action :authenticate_user!
 
@@ -16,16 +17,7 @@ class Api::V1::ReportsController < ApplicationController
 
   private
 
-    def target_user
-      if current_user.admin?
-        find_user = User.where(id: params[:user_id]).first
-        find_user || current_user
-      else
-        current_user
-      end
-    end
-
     def report_params
-      params.permit(:from_date, :to_date, :user_id)
+      params.permit(:from_date, :to_date)
     end
 end

@@ -50,13 +50,17 @@ class EditUserForm extends React.Component {
       blur,
       actionName,
       onCancel,
-      currentRole
+      currentUser: {
+        id: currentUserId,
+        role: currentRole
+      }
     } = this.props;
     return (
       <form onSubmit={handleSubmit}>
         <div>
           <InputLabel>Choose a Role</InputLabel>
           <Field
+            disabled={editingUser && currentUserId === editingUser.id}
             id="role"
             name="role" fullWidth component={Select}
           >
@@ -122,7 +126,7 @@ EditUserForm.propTypes = {
   editingUser: PropTypes.object,
   blur: PropTypes.func.isRequired,
   actionName: PropTypes.string,
-  currentRole: PropTypes.string.isRequired
+  currentUser: PropTypes.object.isRequired
 };
 
 export default reduxForm({

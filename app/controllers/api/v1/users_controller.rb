@@ -3,9 +3,11 @@ class Api::V1::UsersController < ApplicationController
   include Api::ExceptionHandler
 
   before_action :authenticate_user!
+  before_action :check_allowed_role!, only: [:create, :update]
   before_action :set_user, only: [:show, :update, :destroy]
 
   def index
+    authorize User
     @users = User.all.order(id: :desc)
 
     if search_params[:role].present?
@@ -26,6 +28,7 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def search
+    authorize User
     @users = User.all
 
     if search_params[:query].present?
@@ -36,25 +39,34 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def create
-    @user = User.create!(user_params)
+    @user = User.new(user_params)
+    authorize @user
+    @user.save!
     json_response(@user, :created)
   end
 
-  def show
-    json_response(@user)
-  end
-
   def update
+    authorize @user
     @user.update!(user_params)
     json_response(@user)
   end
 
   def destroy
+    authorize @user
     @user.destroy
     head :no_content
   end
 
   private
+    def check_allowed_role!
+      unless current_user.admin? || user_params[:role] != "admin"
+        json_response({
+          message: "You are not authorized to perform this action."
+          },
+          :forbidden
+        )
+      end
+    end
 
     def search_params
       params.permit(:query, :role)

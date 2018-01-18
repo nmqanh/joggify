@@ -119,7 +119,7 @@ function TimezoneSelect(props) {
       onSelect={(timezone) => {
         setTimeout(() => {
           blur('timezone', timezone);
-        }, 300);
+        }, 50);
       }}
       render={({
         getInputProps,
