@@ -47,8 +47,9 @@ class SignUpPage extends React.Component {
       email,
       name,
       password,
-      timezoneOffset: (new Date()).getTimezoneOffset().toString(),
-      history
+      timezoneOffset: (new Date()).getTimezoneOffset().toString()
+    }).then(() => {
+      history.push('/');
     });
   }
 

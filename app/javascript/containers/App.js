@@ -7,6 +7,8 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import ResponsiveDrawer from './ResponsiveDrawer';
 import SignInPage from '../components/authentication/SignInPage';
 import SignUpPage from '../components/authentication/SignUpPage';
+import ResetPage from '../components/authentication/ResetPage';
+import ForgotPage from '../components/authentication/ForgotPage';
 import * as AuthActions from '../actions/AuthActions';
 import * as ToastActions from '../actions/ToastActions';
 import Toaster from '../components/common/Toaster';
@@ -66,6 +68,18 @@ class App extends React.Component {
               exact path="/signup"
               render={(routeProps) => (
                 <SignUpPage {...routeProps} authActions={authActions} />
+              )}
+            />
+            <Route
+              exact path="/reset"
+              render={(routeProps) => (
+                <ResetPage {...routeProps} authActions={authActions} />
+              )}
+            />
+            <Route
+              exact path="/forgot"
+              render={(routeProps) => (
+                <ForgotPage {...routeProps} authActions={authActions} />
               )}
             />
             <Route

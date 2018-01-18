@@ -35,8 +35,8 @@ export default function (dispatch, getState, catchError = true) {
   }, (err) => {
     if (catchError) {
       let fullMessages;
-      if (err.response.message) {
-        fullMessages = err.response.message;
+      if (err.response.data.message) {
+        fullMessages = err.response.data.message;
       } else {
         try {
           fullMessages = err.response.data.errors.full_messages;

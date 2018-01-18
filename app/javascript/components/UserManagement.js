@@ -11,6 +11,7 @@ import Card from 'material-ui/Card';
 import Button from 'material-ui/Button';
 import EditIcon from 'material-ui-icons/Edit';
 import DeleteIcon from 'material-ui-icons/Delete';
+import { LinearProgress } from 'material-ui/Progress';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
@@ -212,7 +213,8 @@ class UserManagement extends React.Component {
         perPage,
         users,
         total,
-        page
+        page,
+        isLoading
       },
       authentication: {
         currentUser: {
@@ -247,6 +249,10 @@ class UserManagement extends React.Component {
         >
           + ADD USER
         </Button>
+
+        {isLoading &&
+          <LinearProgress style={{ marginTop: 10 }}/>
+        }
 
         <Card className={classes.tableWrapper}>
           <Table className={classes.table}>

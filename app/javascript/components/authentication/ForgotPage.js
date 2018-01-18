@@ -9,7 +9,7 @@ import Typography from 'material-ui/Typography';
 import BackgroundImage from 'images/unsplash_jogging.jpg';
 import { Link, withRouter } from 'react-router-dom';
 
-import SignInForm from '../forms/SignInForm';
+import ForgotForm from '../forms/ForgotForm';
 
 const styles = () => ({
   card: {
@@ -39,18 +39,22 @@ const backgroundStyle = {
   bottom: 0
 };
 
-class SignInPage extends React.Component {
-  handleSignInSubmit(values) {
+class ForgotPage extends React.Component {
+  handleForgotSubmit(values) {
     const {
-      email, password
+      email
     } = values;
     const {
       authActions: {
-        signIn
-      }
+        forgetPassword
+      },
+      history
     } = this.props;
 
-    signIn({ email, password });
+    forgetPassword({ email })
+      .then(() => {
+        history.push('/');
+      });
   }
 
   render() {
@@ -61,14 +65,14 @@ class SignInPage extends React.Component {
           <CardContent style={{ paddingTop: '4em ' }}>
             <AppBar position="absolute" className={classes.header}>
               <Typography type="title" color="inherit" className={classes.flex}>
-                Joggify - Jogging time tracker
+                Joggify - Reset your password
               </Typography>
             </AppBar>
-            <SignInForm onSubmit={this.handleSignInSubmit.bind(this)} />
+            <ForgotForm onSubmit={this.handleForgotSubmit.bind(this)}/>
           </CardContent>
           <CardActions>
             <Button component={Link} dense to="/signup">Create an account</Button>
-            <Button component={Link} dense to="/forgot">Forgot password?</Button>
+            <Button component={Link} dense to="/">Sign in</Button>
           </CardActions>
         </Card>
       </div>
@@ -76,9 +80,10 @@ class SignInPage extends React.Component {
   }
 }
 
-SignInPage.propTypes = {
+ForgotPage.propTypes = {
   classes: PropTypes.object.isRequired,
-  authActions: PropTypes.object.isRequired
+  authActions: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(withRouter(SignInPage));
+export default withStyles(styles)(withRouter(ForgotPage));

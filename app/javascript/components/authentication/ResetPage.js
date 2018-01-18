@@ -9,7 +9,7 @@ import Typography from 'material-ui/Typography';
 import BackgroundImage from 'images/unsplash_jogging.jpg';
 import { Link, withRouter } from 'react-router-dom';
 
-import SignInForm from '../forms/SignInForm';
+import ResetForm from '../forms/ResetForm';
 
 const styles = () => ({
   card: {
@@ -39,18 +39,24 @@ const backgroundStyle = {
   bottom: 0
 };
 
-class SignInPage extends React.Component {
-  handleSignInSubmit(values) {
+class ResetPage extends React.Component {
+  handleResetSubmit(values) {
     const {
-      email, password
+      password
     } = values;
     const {
       authActions: {
-        signIn
-      }
+        resetPassword
+      },
+      history
     } = this.props;
 
-    signIn({ email, password });
+    resetPassword({ password })
+      .then(() => {
+        history.push('/');
+      }).catch(() => {
+        history.push('/');
+      });
   }
 
   render() {
@@ -61,14 +67,14 @@ class SignInPage extends React.Component {
           <CardContent style={{ paddingTop: '4em ' }}>
             <AppBar position="absolute" className={classes.header}>
               <Typography type="title" color="inherit" className={classes.flex}>
-                Joggify - Jogging time tracker
+                Joggify - Reset new password
               </Typography>
             </AppBar>
-            <SignInForm onSubmit={this.handleSignInSubmit.bind(this)} />
+            <ResetForm onSubmit={this.handleResetSubmit.bind(this)} />
           </CardContent>
           <CardActions>
             <Button component={Link} dense to="/signup">Create an account</Button>
-            <Button component={Link} dense to="/forgot">Forgot password?</Button>
+            <Button component={Link} dense to="/">Sign in</Button>
           </CardActions>
         </Card>
       </div>
@@ -76,9 +82,10 @@ class SignInPage extends React.Component {
   }
 }
 
-SignInPage.propTypes = {
+ResetPage.propTypes = {
   classes: PropTypes.object.isRequired,
-  authActions: PropTypes.object.isRequired
+  authActions: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(withRouter(SignInPage));
+export default withStyles(styles)(withRouter(ResetPage));

@@ -105,6 +105,13 @@ GEM
       railties (>= 3.2)
       sprockets-rails
     jsonapi-renderer (0.2.0)
+    launchy (2.4.3)
+      addressable (~> 2.3)
+    launchy (2.4.3-java)
+      addressable (~> 2.3)
+      spoon (~> 0.0.1)
+    letter_opener (1.6.0)
+      launchy (~> 2.2)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -190,6 +197,8 @@ GEM
     selenium-webdriver (3.8.0)
       childprocess (~> 0.5)
       rubyzip (~> 1.0)
+    spoon (0.0.6)
+      ffi
     spring (2.0.2)
       activesupport (>= 4.2)
     spring-watcher-listen (2.0.1)
@@ -252,6 +261,7 @@ DEPENDENCIES
   groupdate
   jbuilder (~> 2.5)
   js-routes
+  letter_opener
   listen (>= 3.0.5, < 3.2)
   pg (~> 0.18)
   pg_search

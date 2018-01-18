@@ -1,5 +1,7 @@
+import qs from 'query-string';
 import JoggifyApi from '../lib/JoggifyApi';
 import * as types from '../consts/ActionTypes';
+
 
 function setTokenToUser(response) {
   const currentUser = Object.assign(response.data.data, {
@@ -54,10 +56,41 @@ export function signIn({ email, password }) {
   };
 }
 
+export function forgetPassword({ email }) {
+  return (dispatch, getState) => (
+    JoggifyApi(dispatch, getState)
+      .post(Routes.api_v1_auth_password_reset_path(), {
+        email
+      })
+      .then(() => {
+        dispatch({
+          type: types.TOAST_DASH_MESSAGE,
+          payload: 'An email has been sent to help reset password.'
+        });
+      })
+  );
+}
+
+export function resetPassword({ password }) {
+  return (dispatch, getState) => (
+    JoggifyApi(dispatch, getState)
+      .patch(Routes.user_password_path(), {
+        password,
+        reset_password_token: qs.parse(window.location.search).reset_password_token
+      })
+      .then(() => {
+        dispatch({
+          type: types.TOAST_DASH_MESSAGE,
+          payload: 'New password was set successfully. Please sign in!'
+        });
+      })
+  );
+}
+
 export function signUp({
-  email, name, password, timezoneOffset, history
+  email, name, password, timezoneOffset
 }) {
-  return (dispatch, getState) => {
+  return (dispatch, getState) => (
     JoggifyApi(dispatch, getState)
       .post(Routes.user_registration_path(), {
         email,
@@ -67,7 +100,6 @@ export function signUp({
       })
       .then((response) => {
         const currentUser = setTokenToUser(response);
-        history.push('/');
         dispatch({
           type: types.SIGN_IN,
           currentUser
@@ -76,8 +108,8 @@ export function signUp({
           type: types.TOAST_DASH_MESSAGE,
           payload: 'Signed in successfully.'
         });
-      });
-  };
+      })
+  );
 }
 
 export function updateAccount({
