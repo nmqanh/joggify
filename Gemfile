@@ -71,6 +71,7 @@ group :development, :test do
   # Add support for rspecs
   gem "factory_bot_rails"
   gem "rspec-rails", "~> 3.7"
+  gem "case_transform"
 end
 
 group :development do

@@ -282,6 +282,7 @@ DEPENDENCIES
   active_model_serializers
   byebug
   capybara (~> 2.13)
+  case_transform
   coffee-rails (~> 4.2)
   date_validator
   devise_token_auth

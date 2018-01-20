@@ -24,13 +24,11 @@ class TimeEntryReport
   def by_weeks
     Groupdate.week_start = :mon
     distance_arr = query.group_by_week(
-      :date,
-      time_zone: false
+      :date
     ).sum(:distance_in_kilometres)
 
     duration_arr = query.group_by_week(
-      :date,
-      time_zone: false
+      :date
     ).sum(:duration_in_minutes)
 
     distance_arr.map do |week_date, distance_in_kilometres|
