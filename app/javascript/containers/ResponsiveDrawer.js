@@ -5,7 +5,7 @@ import Drawer from 'material-ui/Drawer';
 import AppBar from 'material-ui/AppBar';
 import cx from 'classnames';
 import Toolbar from 'material-ui/Toolbar';
-import List, { ListItem, ListItemText } from 'material-ui/List';
+import List, { ListItem } from 'material-ui/List';
 import { MenuItem, MenuList } from 'material-ui/Menu';
 import Grow from 'material-ui/transitions/Grow';
 import Paper from 'material-ui/Paper';
@@ -136,7 +136,10 @@ class ResponsiveDrawer extends React.Component {
                   src={`https://www.gravatar.com/avatar/${md5(currentUser.email.toLowerCase().trim())}?d=monsterid`}
                   className={classes.avatar}
                 />
-                <ListItemText primary={currentUser.name} />
+                <div style={{ marginLeft: 10 }}>
+                  <Typography type="subheading">{currentUser.name}</Typography>
+                  {currentUser.role !== 'user' && <Typography type="caption">{currentUser.role.toUpperCase()}</Typography>}
+                </div>
               </ListItem>
             </Target>
             <Popper

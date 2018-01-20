@@ -51,6 +51,9 @@ gem "pg_search"
 # For Authorization
 gem "pundit"
 
+# Use for test end seed generating
+gem "faker"
+
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
@@ -65,6 +68,9 @@ group :development, :test do
   # Adds support for Capybara system testing and selenium driver
   gem "capybara", "~> 2.13"
   gem "selenium-webdriver"
+  # Add support for rspecs
+  gem "factory_bot_rails"
+  gem "rspec-rails", "~> 3.7"
 end
 
 group :development do

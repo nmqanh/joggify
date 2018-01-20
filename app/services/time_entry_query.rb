@@ -20,7 +20,7 @@ class TimeEntryQuery
   end
 
   def filter
-    result = TimeEntry
+    result = TimeEntry.all
     if user.present?
       result = result.where(user: user)
     end

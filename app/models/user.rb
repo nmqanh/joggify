@@ -20,6 +20,8 @@ class User < ActiveRecord::Base
 
   has_many :time_entries, dependent: :destroy
 
+  validates_presence_of :email, :name, :role
+
   validates_inclusion_of :timezone,
     in: ActiveSupport::TimeZone.all.map { |tz| tz.tzinfo.name }
 
