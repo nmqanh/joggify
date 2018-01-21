@@ -18,7 +18,7 @@ RSpec.describe TimeEntryReport do
     expected = distances_hash.map do |date, distance_in_kilometres|
       week_date = Date.parse(date)
       {
-        week: "Week #{week_date.cweek} from #{week_date.strftime("%d/%m/%Y")}",
+        week: "Week #{week_date.cweek} - #{week_date.strftime("%d/%m/%Y")}",
         distanceInKilometres: distance_in_kilometres,
         averageSpeedInKmph: duration_hash[date] == 0 ? 0 : (distance_in_kilometres * 60) / duration_hash[date]
       }

@@ -8,7 +8,8 @@ Joggify is a web application that allows users to track their jogging time and b
   * Backbone: `rails 5.1`
   * Authentication: `devise` with `devise_token_auth`
   * Authorization: `pundit`
-  * Test: `rspec` with `factory_bot`
+  * Rest APIs for all actions
+  * Test: `rspec` with `factory_bot`, e2e tests use `chromedriver` and `capybara`.
   * Lint: `rubocop` with rules get from official rails project
   * Assets Bundler: `webpacker`
   * and some other gems
@@ -19,16 +20,18 @@ Joggify is a web application that allows users to track their jogging time and b
   * UI framework: `material-ui-next`
   * Form handling: `redux-form`
   * Development: `webpack-dev-server` and `react-hot-loader` for Hot reloading when coding
+  * Use Rest API calls to fully interact with back-end
   * Lint: `eslint` with recommended rules for react
   * and some other node_modules
 
 ## How to setup the project for development
 
 1. Make sure your Environment is ready!
-	* Install `Ruby 2.4.3` with bundler.
-	* Install `Node 6.12.3` or above.
+  * Install `Ruby 2.4.3` with bundler.
+  * Install `Node 6.12.3` or above.
   * Install `yarn` with `npm install -g yarn`.
-	* Have your local `Postgres` server ready, use version 9.4 or higher.
+  * Install chromedriver for e2e tests. (if you are using mac, you can easily install it using `brew install chromedriver`)
+  * Have your local `Postgres` server ready, use version 9.4 or higher.
   * Pull latest source code of joggify to your computer.
   * `cd` to the folder that store the source code.
 
@@ -110,21 +113,21 @@ Done! You're ready to access the application: [localhost:3000](http://localhost:
 
 ## Deployment guide for Heroku
 
-        # Create Heroku app
-        heroku create
+    # Create Heroku app
+    heroku create
 
-        # Install addons for postgres and sendgrid
-        heroku addons:create heroku-postgresql
-        heroku addons:create sendgrid:starter
+    # Install addons for postgres and sendgrid
+    heroku addons:create heroku-postgresql
+    heroku addons:create sendgrid:starter
 
-        # First deployment
-        git push heroku master
+    # First deployment
+    git push heroku master
 
-        # Migrate the database and generate seed data
-        heroku run rake db:migrate
-        heroku run rake db:seed
+    # Migrate the database and generate seed data
+    heroku run rake db:migrate
+    heroku run rake db:seed
 
-        # Open your deployed app, yay!!!!
-        heroku open
+    # Open your deployed app, yay!!!!
+    heroku open
 
 I also deployed a sample app here for demo and testing [Joggify on Heroku](https://joggify.herokuapp.com)

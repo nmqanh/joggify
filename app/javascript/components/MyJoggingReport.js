@@ -23,7 +23,7 @@ class MyJoggingReport extends React.Component {
     const { currentUser } = this.props;
     return {
       toDate: moment().format('YYYY-MM-DD').toString(),
-      fromDate: moment().subtract(2, 'months').format('YYYY-MM-DD').toString(),
+      fromDate: moment().subtract(6, 'weeks').format('YYYY-MM-DD').toString(),
       selectedUser: this.isAdmin() ? {
         id: currentUser.id,
         label: `${currentUser.name} - ${currentUser.email}`

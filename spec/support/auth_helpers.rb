@@ -19,4 +19,14 @@ module AuthHelper
       end
     end
   end
+
+  module Feature
+    def ui_sign_in(user, route: "/")
+      visit route
+      user.update_attributes(password: "p@ssw0rd")
+      fill_in "email", with: user.email
+      fill_in "password", with: "p@ssw0rd"
+      click_button "SIGN IN"
+    end
+  end
 end

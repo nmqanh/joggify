@@ -33,9 +33,9 @@ class TimeEntryReport
 
     distance_arr.map do |week_date, distance_in_kilometres|
       {
-        week: "Week #{week_date.cweek} from #{week_date.strftime("%d/%m/%Y")}",
+        week: "Week #{week_date.cweek} - #{week_date.strftime("%d/%m/%Y")}",
         distanceInKilometres: distance_in_kilometres,
-        averageSpeedInKmph: duration_arr[week_date] == 0 ? 0 : (distance_in_kilometres * 60) / duration_arr[week_date]
+        averageSpeedInKmph: duration_arr[week_date] == 0 ? 0 : (distance_in_kilometres * 60.0) / duration_arr[week_date]
       }
     end
   end
