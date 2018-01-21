@@ -107,3 +107,24 @@ Done! You're ready to access the application: [localhost:3000](http://localhost:
 2. Run Rspec Specs (E2E tests and Unit tests included)
 
         bundle exec rspec
+
+## Deployment guide for Heroku
+
+        # Create Heroku app
+        heroku create
+
+        # Install addons for postgres and sendgrid
+        heroku addons:create heroku-postgresql
+        heroku addons:create sendgrid:starter
+
+        # First deployment
+        git push heroku master
+
+        # Migrate the database and generate seed data
+        heroku run rake db:migrate
+        heroku run rake db:seed
+
+        # Open your deployed app, yay!!!!
+        heroku open
+
+I also deployed a sample app here for demo and testing [Joggify on Heroku](https://joggify.herokuapp.com)
