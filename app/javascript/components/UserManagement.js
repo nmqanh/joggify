@@ -14,6 +14,7 @@ import DeleteIcon from 'material-ui-icons/Delete';
 import { LinearProgress } from 'material-ui/Progress';
 import React from 'react';
 import PropTypes from 'prop-types';
+import debounce from 'lodash.debounce';
 import { bindActionCreators } from 'redux';
 import { withStyles } from 'material-ui/styles';
 import { connect } from 'react-redux';
@@ -54,6 +55,8 @@ class UserManagement extends React.Component {
       editingUser: null,
       removingUser: null
     };
+
+    this.handleSearch = debounce(this.handleSearch.bind(this), 100);
   }
 
   canManageUsers() {
@@ -87,30 +90,32 @@ class UserManagement extends React.Component {
   }
 
   handleChangePage = (_, page) => {
+    const {
+      user: {
+        page: prevPage
+      }
+    } = this.props;
+
+    if (prevPage === page + 1) {
+      return;
+    }
     this.handleSearch({ page: page + 1 });
   };
 
   handleFilterReset() {
-    const {
-      user: { page }
-    } = this.props;
     this.setState({
       query: '',
       role: 'all'
     }, () => {
-      this.handleSearch({ page });
+      this.handleSearch({ page: 1 });
     });
   }
 
   handleFilterChange(nextState) {
-    const {
-      user: { page }
-    } = this.props;
-
     this.setState({
       ...nextState
     }, () => {
-      this.handleSearch({ page });
+      this.handleSearch({ page: 1 });
     });
   }
 
